@@ -1,0 +1,14 @@
+# Ignore specific folders
+ocarts/
+resources/
+
+# Optional: Common system files to ignore
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*.swo
+
+# Optional: Editor files
+.vscode/
+*.sublime-*
