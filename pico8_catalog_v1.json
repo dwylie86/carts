@@ -1,0 +1,425 @@
+{
+  "pico8_project_catalog": {
+    "metadata": {
+      "catalog_version": "1.0",
+      "p8_files": 33,
+      "difficulty_levels": ["beginner", "intermediate", "advanced"],
+      "primary_authors": ["zep (Joseph White)", "mboffin", "user"],
+      "last_updated": "2025-09-24",
+      "learning_objectives": "Comprehensive Pico-8 game development from basics to advanced techniques",
+    },
+    "user_project": {
+      "filename": "pongv1.p8",
+      "status": "complete", 
+      "description": "Fully functional Pong game ready for enhancement",
+      "features": ["Player-controlled paddle", "Ball physics", "Score system", "Life system", "Audio integration"],
+      "token_usage": "~400-500 tokens",
+      "available_tokens": "~7,600+ for expansion",
+      "enhancement_options": ["Game features", "World building", "Visual effects", "Polish & publishing"]
+    },
+    "learning_resources": [
+      {
+        "category": "fundamentals",
+        "files": [
+          {
+            "filename": "game_loop.p8",
+            "author": "template",
+            "difficulty": "beginner",
+            "learning_objectives": ["Basic Pico-8 structure", "Three core functions", "Program organization"],
+            "key_concepts": ["_init(), _update(), _draw() functions", "30 FPS timing", "Game loop architecture"],
+            "pico8_functions": ["_init", "_update", "_draw"],
+            "teaching_value": "Essential first lesson - every Pico-8 game starts with this foundation",
+            "prerequisites": "None - absolute beginner",
+            "follows_up": "game_loop_draw.p8"
+          },
+          {
+            "filename": "game_loop_draw.p8",
+            "author": "mboffin",
+            "difficulty": "beginner", 
+            "learning_objectives": ["Visual explanation of game loop", "Frame timing understanding", "Self-documenting code"],
+            "key_concepts": ["Interactive tutorials", "Visual debugging", "Frame counters", "Blinking cursors"],
+            "pico8_functions": ["print", "rectfill", "spr", "cls"],
+            "teaching_value": "Shows how to create educational demos and understand timing",
+            "prerequisites": "game_loop.p8",
+            "follows_up": "hello.p8"
+          },
+          {
+            "filename": "hello.p8",
+            "author": "zep",
+            "difficulty": "beginner",
+            "learning_objectives": ["Sprite animation", "Color palettes", "Music integration", "Mathematical movement"],
+            "key_concepts": ["spr() function", "pal() color swapping", "t() timing", "cos/sin movement", "Multi-system integration"],
+            "pico8_functions": ["spr", "pal", "print", "cos", "sin", "t", "music"],
+            "teaching_value": "Perfect second lesson - combines graphics, animation, and audio elegantly",
+            "prerequisites": "game_loop_draw.p8",
+            "follows_up": "drawing.p8, colors.p8"
+          },
+          {
+            "filename": "drawing.p8",
+            "author": "mboffin",
+            "difficulty": "beginner",
+            "learning_objectives": ["Basic drawing primitives", "Shape functions", "Graphics reference"],
+            "key_concepts": ["pset, line, circ, rect functions", "filled vs outlined shapes", "Coordinate system"],
+            "pico8_functions": ["pset", "line", "circ", "circfill", "rect", "rectfill"],
+            "teaching_value": "Essential reference card for all basic drawing functions - keep handy",
+            "prerequisites": "game_loop.p8",
+            "follows_up": "colors.p8"
+          },
+          {
+            "filename": "colors.p8",
+            "author": "mboffin",
+            "difficulty": "beginner",
+            "learning_objectives": ["Pico-8 color palette", "Color numbers", "Interactive reference"],
+            "key_concepts": ["16-color palette", "Alternative colors", "Color indexing", "Interactive displays"],
+            "pico8_functions": ["rectfill", "print", "btn", "pal"],
+            "teaching_value": "Interactive color reference - essential for any graphics work",
+            "prerequisites": "drawing.p8",
+            "follows_up": "buttons.p8"
+          }
+        ]
+      },
+      {
+        "category": "input_interaction",
+        "files": [
+          {
+            "filename": "buttons.p8",
+            "author": "mboffin",
+            "difficulty": "beginner",
+            "learning_objectives": ["Button input handling", "Movement controls", "Input visualization"],
+            "key_concepts": ["btn() vs btnp()", "Direction constants", "Boundary clamping", "Real-time input display"],
+            "pico8_functions": ["btn", "mid", "pset"],
+            "teaching_value": "Shows live button state and demonstrates fundamental movement patterns",
+            "prerequisites": "colors.p8",
+            "follows_up": "pixel_movement.p8"
+          },
+          {
+            "filename": "drippy.p8",
+            "author": "zep",
+            "difficulty": "beginner",
+            "learning_objectives": ["Pixel manipulation", "Simple physics", "Color effects"],
+            "key_concepts": ["pget/pset pixel operations", "Gravity simulation", "Color interpolation", "Particle basics"],
+            "pico8_functions": ["pget", "pset", "rnd", "btn"],
+            "teaching_value": "Fun introduction to pixel-level effects and simple physics simulation",
+            "prerequisites": "buttons.p8",
+            "follows_up": "bounce.p8"
+          },
+          {
+            "filename": "sort.p8",
+            "author": "zep",
+            "difficulty": "beginner",
+            "learning_objectives": ["Sorting algorithms", "Data visualization", "Interactive demos"],
+            "key_concepts": ["Bubble sort", "Array swapping", "Visual feedback", "Custom sprites", "Algorithm visualization"],
+            "pico8_functions": ["spr", "btnp", "rnd", "print", "rectfill"],
+            "teaching_value": "Great for teaching algorithms and making data structures visual and understandable",
+            "prerequisites": "colors.p8",
+            "follows_up": "automata.p8"
+          }
+        ]
+      },
+      {
+        "category": "physics_movement",
+        "files": [
+          {
+            "filename": "bounce.p8",
+            "author": "zep",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Physics simulation", "Collision detection", "Velocity/acceleration"],
+            "key_concepts": ["Gravity", "Bouncing mechanics", "Velocity damping", "Floor collision", "60 FPS timing"],
+            "pico8_functions": ["circfill", "spr", "_update60", "sfx", "fillp"],
+            "teaching_value": "Classic physics demo - teaches core game physics concepts used in most games",
+            "prerequisites": "drippy.p8",
+            "follows_up": "pixel_movement.p8"
+          },
+          {
+            "filename": "gravity.p8",
+            "author": "zep",
+            "difficulty": "beginner",
+            "learning_objectives": ["Basic gravity simulation", "Simple physics", "Falling objects"],
+            "key_concepts": ["Gravity acceleration", "Velocity integration", "Basic physics simulation"],
+            "pico8_functions": ["circfill", "cls", "rnd"],
+            "teaching_value": "Simple introduction to physics concepts before more complex bounce.p8",
+            "prerequisites": "drippy.p8",
+            "follows_up": "bounce.p8"
+          },
+          {
+            "filename": "movement_with_interia.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Inertial movement", "Acceleration systems", "Friction mechanics"],
+            "key_concepts": ["Velocity accumulation", "Max speed limits", "Drag/friction", "Smooth movement", "Wall collision"],
+            "pico8_functions": ["btn", "mid", "abs", "can_move", "spr"],
+            "teaching_value": "Essential for realistic player movement - teaches physics-based controls",
+            "prerequisites": "bounce.p8",
+            "follows_up": "pixel_movement.p8"
+          },
+          {
+            "filename": "grid_movement.p8",
+            "author": "mboffin",
+            "difficulty": "beginner",
+            "learning_objectives": ["Grid-based movement", "Tile collision", "Turn-based movement"],
+            "key_concepts": ["Discrete positioning", "Grid snapping", "Tile-based collision", "Turn-based input"],
+            "pico8_functions": ["btnp", "mget", "fget", "sfx", "spr"],
+            "teaching_value": "Foundation for RPG and puzzle games - discrete movement system",
+            "prerequisites": "buttons.p8",
+            "follows_up": "map_screens.p8"
+          },
+          {
+            "filename": "pixel_movement.p8",
+            "author": "mboffin", 
+            "difficulty": "intermediate",
+            "learning_objectives": ["Pixel-perfect movement", "Collision systems", "Map interaction"],
+            "key_concepts": ["Tile-based collision", "Pixel precision", "Map reading", "Corner checking", "Movement validation"],
+            "pico8_functions": ["mget", "map", "camera", "fget", "btn"],
+            "teaching_value": "Essential for platformer-style games with precise collision detection",
+            "prerequisites": "movement_with_inertia.p8",
+            "follows_up": "wander.p8"
+          },
+          {
+            "filename": "wander.p8",
+            "author": "zep",
+            "difficulty": "intermediate", 
+            "learning_objectives": ["Acceleration movement", "Camera systems", "Animation integration"],
+            "key_concepts": ["Velocity + acceleration", "Room-based camera", "Speed-based animation", "Smooth movement"],
+            "pico8_functions": ["btn", "camera", "map", "spr", "mget", "mset", "sqrt"],
+            "teaching_value": "Complete movement system perfect for adventure/platformer games",
+            "prerequisites": "pixel_movement.p8",
+            "follows_up": "item_animation.p8"
+          }
+        ]
+      },
+      {
+        "category": "camera_systems",
+        "files": [
+          {
+            "filename": "map_screens.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Screen-based maps", "Camera management", "Map transitions"],
+            "key_concepts": ["Screen boundaries", "Map coordinates", "Camera positioning", "Screen switching"],
+            "pico8_functions": ["camera", "map", "flr", "btnp", "spr"],
+            "teaching_value": "Classic screen-by-screen movement like early Zelda games",
+            "prerequisites": "grid_movement.p8",
+            "follows_up": "map_screens_smooth.p8"
+          },
+          {
+            "filename": "map_screens_smooth.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Smooth camera transitions", "Advanced camera systems", "Screen blending"],
+            "key_concepts": ["Camera interpolation", "Smooth transitions", "Screen boundaries", "Progressive movement"],
+            "pico8_functions": ["camera", "map", "flr", "btnp", "spr"],
+            "teaching_value": "Advanced camera work - smooth transitions between discrete screens",
+            "prerequisites": "map_screens.p8",
+            "follows_up": "camera_follow.p8"
+          },
+          {
+            "filename": "camera_follow.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Following camera", "Player tracking", "Smooth camera movement"],
+            "key_concepts": ["Camera tracking", "Player-centered view", "Room boundaries", "Smooth following"],
+            "pico8_functions": ["camera", "map", "btn", "spr", "flr"],
+            "teaching_value": "Modern camera system that follows the player smoothly",
+            "prerequisites": "map_screens_smooth.p8",
+            "follows_up": "wander.p8"
+          }
+        ]
+      },
+      {
+        "category": "animation_effects",
+        "files": [
+          {
+            "filename": "item_animation.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Animation systems", "Object management", "Reusable functions"],
+            "key_concepts": ["Frame-based animation", "Animation data structures", "Generic functions", "Sprite cycling"],
+            "pico8_functions": ["spr", "add", "foreach", "rnd"],
+            "teaching_value": "Shows how to build reusable animation systems for multiple object types",
+            "prerequisites": "wander.p8",
+            "follows_up": "particles.p8"
+          },
+          {
+            "filename": "particles.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Particle systems", "Advanced effects", "Performance management"],
+            "key_concepts": ["Particle lifecycle", "Random generation", "Color transitions", "Physics integration", "Memory management"],
+            "pico8_functions": ["add", "del", "foreach", "cos", "sin", "rnd", "line"],
+            "teaching_value": "Advanced effects system - teaches performance optimization and visual impact",
+            "prerequisites": "item_animation.p8",
+            "follows_up": "game_states_simple.p8"
+          }
+        ]
+      },
+      {
+        "category": "game_architecture",
+        "files": [
+          {
+            "filename": "game_states_simple.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Game state management", "Menu systems", "Complete game structure"],
+            "key_concepts": ["State variables", "Conditional execution", "Game flow", "Menu navigation"],
+            "pico8_functions": ["btnp", "pget", "pset", "circfill", "rectfill"],
+            "teaching_value": "Beginner-friendly approach to complete games with menus and states",
+            "prerequisites": "particles.p8",
+            "follows_up": "game_states_advanced.p8"
+          },
+          {
+            "filename": "game_states_advanced.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Advanced state management", "Function pointers", "Clean code architecture"],
+            "key_concepts": ["Function reassignment", "Dynamic dispatch", "Modular design", "Elegant state switching"],
+            "pico8_functions": ["btnp", "pget", "pset", "circfill", "rectfill"],
+            "teaching_value": "Elegant solution for complex games - more advanced programming patterns",
+            "prerequisites": "game_states_simple.p8",
+            "follows_up": "waves.p8, automata.p8"
+          }
+        ]
+      },
+      {
+        "category": "systems_combat",
+        "files": [
+          {
+            "filename": "pickups.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Pickup systems", "Item collection", "Array management", "Win conditions"],
+            "key_concepts": ["Object arrays", "Collision detection", "Item spawning", "Score tracking", "Game completion"],
+            "pico8_functions": ["add", "del", "foreach", "rnd", "flr", "overlap", "sfx"],
+            "teaching_value": "Complete collectible system - foundation for many game types",
+            "prerequisites": "overlap.p8",
+            "follows_up": "projectiles.p8"
+          },
+          {
+            "filename": "projectiles.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Projectile systems", "Combat mechanics", "Collision handling"],
+            "key_concepts": ["Bullet lifecycle", "Enemy management", "Hit detection", "Array management", "Sound integration"],
+            "pico8_functions": ["add", "del", "foreach", "spr", "sfx"],
+            "teaching_value": "Complete combat system showing how to manage multiple moving objects",
+            "prerequisites": "pickups.p8",
+            "follows_up": "collide.p8"
+          },
+          {
+            "filename": "overlap.p8",
+            "author": "mboffin",
+            "difficulty": "beginner",
+            "learning_objectives": ["Collision detection", "Bounding box math", "Interactive reference"],
+            "key_concepts": ["Rectangle overlap", "Boundary testing", "Visual debugging", "Collision math"],
+            "pico8_functions": ["rect", "rectfill", "print"],
+            "teaching_value": "Interactive reference tool for understanding collision detection math",
+            "prerequisites": "drawing.p8",
+            "follows_up": "pickups.p8"
+          },
+          {
+            "filename": "collide.p8",
+            "author": "zep",
+            "difficulty": "advanced",
+            "learning_objectives": ["Advanced collision", "Actor systems", "Multi-object physics"],
+            "key_concepts": ["Actor-based design", "Complex collision", "Physics integration", "Multi-object systems"],
+            "pico8_functions": ["add", "del", "foreach", "abs", "btn", "camera", "map"],
+            "teaching_value": "Professional-level collision system with multiple interacting objects",
+            "prerequisites": "projectiles.p8",
+            "follows_up": "Complete games"
+          }
+        ]
+      },
+      {
+        "category": "mathematics_algorithms",
+        "files": [
+          {
+            "filename": "waves.p8",
+            "author": "zep",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Mathematical visualization", "Trigonometry", "Procedural graphics"],
+            "key_concepts": ["Distance calculation", "Wave functions", "Time-based animation", "Mathematical art"],
+            "pico8_functions": ["cos", "sqrt", "pset", "t", "cls"],
+            "teaching_value": "Shows how mathematics creates beautiful visuals - great for STEM education",
+            "prerequisites": "game_states_advanced.p8",
+            "follows_up": "automata.p8"
+          },
+          {
+            "filename": "automata.p8",
+            "author": "zep",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Cellular automata", "Rule systems", "Memory manipulation"],
+            "key_concepts": ["Rule arrays", "Screen scrolling", "Binary operations", "Pattern generation", "Emergent behavior"],
+            "pico8_functions": ["memcpy", "pget", "pset", "btnp", "flr", "rnd"],
+            "teaching_value": "Shows how simple rules create complex emergent behavior - great for AI concepts",
+            "prerequisites": "waves.p8, sort.p8",
+            "follows_up": "fill_patterns.p8"
+          },
+          {
+            "filename": "dots3d.p8",
+            "author": "zep",
+            "difficulty": "advanced",
+            "learning_objectives": ["3D graphics", "Matrix transformations", "Depth sorting"],
+            "key_concepts": ["3D to 2D projection", "Rotation matrices", "Z-depth sorting", "Perspective", "3D mathematics"],
+            "pico8_functions": ["cos", "sin", "t", "circfill", "add", "all"],
+            "teaching_value": "Introduction to 3D programming - demonstrates fundamental 3D concepts",
+            "prerequisites": "waves.p8",
+            "follows_up": "cast.p8"
+          }
+        ]
+      },
+      {
+        "category": "reference_materials",
+        "files": [
+          {
+            "filename": "fill_patterns.p8",
+            "author": "mboffin",
+            "difficulty": "intermediate",
+            "learning_objectives": ["Fill patterns", "Binary manipulation", "Advanced graphics", "Interactive tools"],
+            "key_concepts": ["fillp() function", "Binary patterns", "Transparency effects", "Interactive pattern editor"],
+            "pico8_functions": ["fillp", "btnp", "sub", "tonum", "rectfill", "circfill"],
+            "teaching_value": "Interactive tool for learning advanced fill pattern effects - great for graphics",
+            "prerequisites": "automata.p8",
+            "follows_up": "cast.p8"
+          },
+          {
+            "filename": "music_reference.p8",
+            "author": "mboffin",
+            "difficulty": "beginner",
+            "learning_objectives": ["Music system", "Note mapping", "Audio functions"],
+            "key_concepts": ["Note-to-key mapping", "sfx() function", "music() function", "Audio integration"],
+            "pico8_functions": ["sfx", "music"],
+            "teaching_value": "Essential reference for adding sound and music to games - keep accessible",
+            "prerequisites": "hello.p8",
+            "follows_up": "Any project needing audio"
+          }
+        ]
+      },
+      {
+        "category": "complete_games",
+        "files": [
+          {
+            "filename": "cast.p8",
+            "author": "zep",
+            "difficulty": "advanced",
+            "learning_objectives": ["Raycasting", "3D rendering", "Advanced mathematics"],
+            "key_concepts": ["Ray intersection", "3D projection", "Performance optimization", "DDA algorithm", "3D in 2D"],
+            "pico8_functions": ["mget", "mset", "btn", "sgn", "abs", "flr", "cos", "sin"],
+            "teaching_value": "Shows advanced 3D techniques - demonstrates high-level mathematical programming",
+            "prerequisites": "dots3d.p8, fill_patterns.p8, strong math background",
+            "follows_up": "jelpi.p8"
+          },
+          {
+            "filename": "jelpi.p8",
+            "author": "zep",
+            "difficulty": "advanced",
+            "learning_objectives": ["Complete game development", "Advanced systems integration", "Professional polish"],
+            "key_concepts": ["Actor systems", "Collision detection", "Level design", "Game polish", "Professional structure"],
+            "pico8_functions": ["mget", "mset", "fget", "add", "del", "foreach", "camera"],
+            "teaching_value": "Professional-quality complete game showing all concepts working together",
+            "prerequisites": "cast.p8 or equivalent advanced knowledge",
+            "follows_up": "Independent game development"
+          }
+        ]
+      }
+    ]
+  }
+}
