@@ -1,6 +1,7 @@
 # Ignore specific folders
 ocarts/
 resources/
+demos/
 
 # Optional: Common system files to ignore
 .DS_Store
