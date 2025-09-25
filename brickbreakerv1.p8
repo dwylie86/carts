@@ -17,13 +17,12 @@ function _update()
 	if game_state == "playing" then
 		move_paddle()
 		move_ball()
-		bounce_ball()
- 	bounce_paddle()
- 	lose_dead_ball()
+ 		bounce_paddle()
+ 		lose_dead_ball()
 	elseif game_state == "game_over" then
-  if btnp(❎) then
-   _init()
-  end
+  		if btnp(❎) then
+   		_init()
+  		end
 	end
 end
 
@@ -77,15 +76,19 @@ function draw_paddle()
 end
 
 function bounce_paddle()
-	if ball.x >= pad.x - ball.s and 
-  ball.x <= pad.x + pad.w + ball.s and
-  ball.y >= pad.y - ball.s and 
-  ball.y <= pad.y + ball.s then  -- only check near top
-  sfx(0)
-  score += 10
-  ball.y = pad.y - ball.s - 1  -- push above paddle
-  ball.ydir = -ball.ydir
- end
+    if ball.x >= pad.x - ball.s and 
+       ball.x <= pad.x + pad.w + ball.s and
+       ball.y >= pad.y - ball.s and 
+       ball.y <= pad.y + ball.s then
+        
+        sfx(0)
+        score += 10
+        ball.y = pad.y - ball.s - 1
+        
+        local hit_pos = (ball.x - pad.x) - pad.w/2
+        ball.velx = hit_pos * 0.3
+        ball.vely = -abs(ball.vely)
+    end
 end
 -->8
 --ball functions
@@ -94,8 +97,9 @@ function init_ball()
 		x=64,
 		y=64,
 		s=3,
-		xdir=5,
-		ydir=-3,
+		velx=0,
+		vely=0,
+		on_paddle=true
 	}
 end
 
@@ -106,30 +110,42 @@ function draw_ball()
 end
 
 function move_ball()
-	ball.x+=ball.xdir
-	ball.y+=ball.ydir
-end
-
-function bounce_ball()
-	if ball.x<=ball.s or ball.x>=128-ball.s then
-   		ball.xdir=-ball.xdir
-   		sfx(0)
- end
-	if ball.y<=ball.s then
-    	ball.ydir = -ball.ydir
-     sfx(0) 
- end
+	if ball.on_paddle then
+        ball.x = pad.x + pad.w/2  -- center on paddle
+        ball.y = pad.y - ball.s - 1  -- just above paddle
+        
+        if btnp(❎) then
+            ball.velx = 2
+            ball.vely = -4
+            ball.on_paddle = false
+        end
+    else
+		if ball.x + ball.velx < 0 + ball.s or
+    	   ball.x + ball.velx > 128 - ball.s then
+        	ball.velx *= -1
+        	sfx(0)
+    	else
+        	ball.x += ball.velx
+    	end
+    
+    	if ball.y + ball.vely < 0 + ball.s then
+        	ball.vely *= -1
+        	sfx(0)
+    	else
+        	ball.y += ball.vely
+    	end
+	end
 end
 
 function lose_dead_ball()      
 	if ball.y>128 then             
 		if lives>0 then
 			sfx(3)             
-			ball.y=24
-			lives-=1      
+			lives-=1
+			ball.on_paddle=true      
 		else
 		 game_over() 
- 	end    
+ 		end    
 	end
 end
 -->8
