@@ -2,14 +2,15 @@ pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
 --main entry point of game
-
 function _init()
 	score = 0
 	lives = 3
+	multiplier = 1
 	game_state = "playing"
-
+	bricks = {}
 	init_paddle()
 	init_ball()
+	make_bricks()
 	music(0)
 end
 
@@ -19,10 +20,15 @@ function _update()
 		move_ball()
  		bounce_paddle()
  		lose_dead_ball()
+ 		check_win()
 	elseif game_state == "game_over" then
   		if btnp(❎) then
    		_init()
   		end
+	elseif game_state == "win" then
+		if btnp(❎) then
+			_init()
+		end
 	end
 end
 
@@ -33,21 +39,28 @@ function _draw()
 		draw_paddle()
 		draw_ball()
 		draw_ui()
+		foreach(bricks, draw_brick)
 	elseif game_state == "game_over" then
-  print("game over", 45, 64, 15)
-  print("score: "..score, 45, 72, 15)
-  print("press x to restart", 25, 80, 15)	
+		print("game over", 64 - #"game over" * 2, 50, 15)
+		local score_text = "score: "..score
+		print(score_text, 64 - #score_text * 2, 58, 15)
+		print("press x to restart", 64 - #"press x to restart" * 2, 66, 15)
+	elseif game_state == "win" then
+		print("you win!", 64 - #"you win!" * 2, 42, 11)
+		local score_text = "score: "..score
+		print(score_text, 64 - #score_text * 2, 50, 15)
+		print("press x to restart", 64 - #"press x to restart" * 2, 66, 15)
 	end
-end	
+end
 -->8
 --paddle functions
 function init_paddle()
 	pad = {
 		x=52,
 		y=122,
-		w=24,
+		w=28,
 		h=4,
-		s=2
+		s=3
 	}
 end
 
@@ -82,7 +95,6 @@ function bounce_paddle()
        ball.y <= pad.y + ball.s then
         
         sfx(0)
-        score += 10
         ball.y = pad.y - ball.s - 1
         
         local hit_pos = (ball.x - pad.x) - pad.w/2
@@ -111,8 +123,8 @@ end
 
 function move_ball()
 	if ball.on_paddle then
-        ball.x = pad.x + pad.w/2  -- center on paddle
-        ball.y = pad.y - ball.s - 1  -- just above paddle
+        ball.x = pad.x + pad.w/2
+        ball.y = pad.y - ball.s - 1
         
         if btnp(❎) then
             ball.velx = 2
@@ -128,13 +140,37 @@ function move_ball()
         	ball.x += ball.velx
     	end
     
-    	if ball.y + ball.vely < 0 + ball.s then
+    	if ball.y + ball.vely < 12 + ball.s then
         	ball.vely *= -1
         	sfx(0)
     	else
         	ball.y += ball.vely
     	end
+		check_brick_collision()
 	end
+end
+
+function check_brick_collision()
+    for brick in all(bricks) do
+        if brick.alive then
+            if ball.x + ball.s >= brick.x and
+               ball.x - ball.s <= brick.x + brick.w and
+               ball.y + ball.s >= brick.y and
+               ball.y - ball.s <= brick.y + brick.h then
+                brick.alive = false
+                score += ceil(brick.type * 10 * multiplier)
+                multiplier = min(multiplier + 0.25, 4)
+                sfx(0)
+                ball.vely *= -1
+                if ball.vely > 0 then
+                    ball.y = brick.y + brick.h + ball.s + 1
+                else
+                    ball.y = brick.y - ball.s - 1
+                end
+                return
+            end
+        end
+    end
 end
 
 function lose_dead_ball()      
@@ -142,21 +178,89 @@ function lose_dead_ball()
 		if lives>0 then
 			sfx(3)             
 			lives-=1
+			multiplier = 1
 			ball.on_paddle=true      
 		else
 		 game_over() 
  		end    
 	end
 end
+
+function check_win()
+    for brick in all(bricks) do
+        if brick.alive then
+            return
+        end
+    end
+    game_state = "win"
+end
+-->8
+--scene functions
+--level layout
+level = {
+    {5,5,5,5,5,5,5,5,5,5},
+    {4,4,4,4,4,4,4,4,4,4},
+    {3,3,3,3,3,3,3,3,3,3},
+    {2,2,2,2,2,2,2,2,2,2},
+    {1,1,1,1,1,1,1,1,1,1}
+}
+-- brick configuration
+brick_cols = 10
+brick_rows = 5
+brick_gap = 2
+brick_h = 3
+brick_start_y = 20
+side_margin = 4
+available_width = 128 - (side_margin * 2)
+brick_spacing_x = (available_width + brick_gap) / brick_cols
+brick_w = brick_spacing_x - brick_gap
+brick_offset_x = side_margin
+brick_spacing_y = 5
+
+function make_bricks()
+    for row = 1, #level do
+        for col = 1, #level[row] do
+            local brick_type = level[row][col]
+            
+            if brick_type > 0 then
+                add(bricks, {
+                    x = (col - 1) * brick_spacing_x + brick_offset_x,
+                    y = (row - 1) * brick_spacing_y + brick_start_y,
+                    w = brick_w,
+                    h = brick_h,
+                    type = brick_type,
+                    color = brick_type + 7,
+                    alive = true
+                })
+            end
+        end
+    end
+end
+function draw_brick(brick)
+    if brick.alive then
+        rectfill(brick.x, brick.y, 
+                 brick.x + brick.w, 
+                 brick.y + brick.h, 
+                 brick.color)
+    end
+end
 -->8
 --game state functions
 function draw_ui()
+	rectfill(0, 0, 127, 12, 1)
 	print(
-		"score: "..score,8, 6,15
+		"score: "..score,8,4,15
 	)
+	local mult_color = 15
+	if multiplier >= 2 then mult_color = 10 end
+	if multiplier >= 3 then mult_color = 9 end
+	if multiplier == 4 then mult_color = 8 end
+	
+	print(multiplier.."x", 60, 4, mult_color)
 	for i=1,lives do
-		spr(004,90+i*8,4)
- end
+		spr(004,90+i*8,2)
+ 	end
+	line(0, 12, 127, 12, 7)
 end
 
 function game_over()

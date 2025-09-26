@@ -9,9 +9,9 @@
       "learning_objectives": "Comprehensive Pico-8 game development from basics to advanced techniques",
     },
     "user_project": {
-      "filename": "pongv1.p8",
+      "filename": "brickbreakerv1.p8",
       "status": "complete", 
-      "description": "Fully functional Pong game ready for enhancement",
+      "description": "Fully functional Brick Breaker game ready for enhancement",
       "features": ["Player-controlled paddle", "Ball physics", "Score system", "Life system", "Audio integration"],
       "token_usage": "~400-500 tokens",
       "available_tokens": "~7,600+ for expansion",
