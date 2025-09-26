@@ -8,10 +8,13 @@ function _init()
 	multiplier = 1
 	game_state = "playing"
 	bricks = {}
+	total_bricks_possible=0
+	bricks_destroyed_combo=0
+	max_combo=0
 	init_paddle()
 	init_ball()
 	make_bricks()
-	music(0)
+	--music(0)
 end
 
 function _update()
@@ -46,11 +49,16 @@ function _draw()
 		print(score_text, 64 - #score_text * 2, 58, 15)
 		print("press x to restart", 64 - #"press x to restart" * 2, 66, 15)
 	elseif game_state == "win" then
-		print("you win!", 64 - #"you win!" * 2, 42, 11)
-		local score_text = "score: "..score
-		print(score_text, 64 - #score_text * 2, 50, 15)
-		print("press x to restart", 64 - #"press x to restart" * 2, 66, 15)
+    print("you win!", 64 - #"you win!" * 2, 42, 11)
+    local score_text = "score: "..score
+    print(score_text, 64 - #score_text * 2, 50, 15)
+    if bricks_destroyed_combo == total_bricks_possible and time() % 0.5 < 0.25 then
+    	print("perfect round!", 64 - #"perfect round!" * 2, 58, 11)
 	end
+    local combo_text = "max combo: "..max_combo
+    print(combo_text, 64 - #combo_text * 2, 66, 15)
+    print("press x to restart", 64 - #"press x to restart" * 2, 74, 15)
+	end	
 end
 -->8
 --paddle functions
@@ -158,7 +166,11 @@ function check_brick_collision()
                ball.y + ball.s >= brick.y and
                ball.y - ball.s <= brick.y + brick.h then
                 brick.alive = false
-                score += ceil(brick.type * 10 * multiplier)
+                bricks_destroyed_combo += 1
+				if bricks_destroyed_combo > max_combo then
+   					max_combo = bricks_destroyed_combo
+				end
+				score += ceil(brick.type * 10 * multiplier)
                 multiplier = min(multiplier + 0.25, 4)
                 sfx(0)
                 ball.vely *= -1
@@ -178,7 +190,11 @@ function lose_dead_ball()
 		if lives>0 then
 			sfx(3)             
 			lives-=1
-			multiplier = 1
+			multiplier=1
+			if bricks_destroyed_combo > max_combo then
+       			max_combo = bricks_destroyed_combo
+    		end
+			bricks_destroyed_combo=0
 			ball.on_paddle=true      
 		else
 		 game_over() 
@@ -198,10 +214,10 @@ end
 --scene functions
 --level layout
 level = {
-    {5,5,5,5,5,5,5,5,5,5},
-    {4,4,4,4,4,4,4,4,4,4},
-    {3,3,3,3,3,3,3,3,3,3},
-    {2,2,2,2,2,2,2,2,2,2},
+    {1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1},
+	{1,1,1,1,1,1,1,1,1,1},
+	{1,1,1,1,1,1,1,1,1,1},
     {1,1,1,1,1,1,1,1,1,1}
 }
 -- brick configuration
@@ -223,7 +239,8 @@ function make_bricks()
             local brick_type = level[row][col]
             
             if brick_type > 0 then
-                add(bricks, {
+                total_bricks_possible+=1
+				add(bricks, {
                     x = (col - 1) * brick_spacing_x + brick_offset_x,
                     y = (row - 1) * brick_spacing_y + brick_start_y,
                     w = brick_w,
