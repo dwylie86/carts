@@ -11,6 +11,21 @@ function _init()
 	total_bricks_possible=0
 	bricks_destroyed_combo=0
 	max_combo=0
+	
+	multi_effects = {
+		[1] = {shake=0, color=15},
+		[2] = {shake=1, color=10},
+		[3] = {shake=2, color=9},
+		[4] = {shake=3, color=8}
+	}
+	
+	combo_popup = {
+    active = false,
+    text = "",
+    x = 0,
+    y = 64,
+    start_time = 0
+}
 	init_paddle()
 	init_ball()
 	make_bricks()
@@ -43,6 +58,7 @@ function _draw()
 		draw_ball()
 		draw_ui()
 		foreach(bricks, draw_brick)
+		draw_combo_popup()
 	elseif game_state == "game_over" then
 		print("game over", 64 - #"game over" * 2, 50, 15)
 		local score_text = "score: "..score
@@ -170,6 +186,18 @@ function check_brick_collision()
 				if bricks_destroyed_combo > max_combo then
    					max_combo = bricks_destroyed_combo
 				end
+				if bricks_destroyed_combo % 10 == 0 then
+					combo_popup.active = true
+					combo_popup.text = bricks_destroyed_combo.." combo!"
+					combo_popup.start_time = time()
+					
+					-- Get color from current multiplier tier
+					local mult_tier = flr(multiplier)
+					combo_popup.color = multi_effects[mult_tier].color
+					
+					combo_popup.x = rnd(128 - #combo_popup.text * 4)
+					combo_popup.y = 64
+				end
 				score += ceil(brick.type * 10 * multiplier)
                 multiplier = min(multiplier + 0.25, 4)
                 sfx(0)
@@ -268,16 +296,33 @@ function draw_ui()
 	print(
 		"score: "..score,8,4,15
 	)
-	local mult_color = 15
-	if multiplier >= 2 then mult_color = 10 end
-	if multiplier >= 3 then mult_color = 9 end
-	if multiplier == 4 then mult_color = 8 end
+	local mult_tier = flr(multiplier)
+	local effect = multi_effects[mult_tier]
+	local shake_x = 0
+	local shake_y = 0
+	if effect.shake > 0 then
+		shake_x = rnd(effect.shake * 2) - effect.shake
+		shake_y = rnd(effect.shake * 2) - effect.shake
+	end
+	print(multiplier.."x", 60 + shake_x, 4 + shake_y, effect.color)
 	
-	print(multiplier.."x", 60, 4, mult_color)
 	for i=1,lives do
 		spr(004,90+i*8,2)
  	end
 	line(0, 12, 127, 12, 7)
+end
+
+function draw_combo_popup()
+    if combo_popup.active then
+        local elapsed = time() - combo_popup.start_time
+        local slide_y = combo_popup.y + (elapsed * 30)
+        
+        if elapsed > 1.5 or slide_y > 128 then
+            combo_popup.active = false
+        else
+            print(combo_popup.text, combo_popup.x, slide_y, combo_popup.color)
+        end
+    end
 end
 
 function game_over()
