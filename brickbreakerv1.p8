@@ -65,12 +65,12 @@ function _draw()
 		print(score_text, 64 - #score_text * 2, 58, 15)
 		print("press x to restart", 64 - #"press x to restart" * 2, 66, 15)
 	elseif game_state == "win" then
-    print("you win!", 64 - #"you win!" * 2, 42, 11)
-    local score_text = "score: "..score
-    print(score_text, 64 - #score_text * 2, 50, 15)
-    if bricks_destroyed_combo == total_bricks_possible and time() % 0.5 < 0.25 then
-    	print("perfect round!", 64 - #"perfect round!" * 2, 58, 11)
-	end
+    	print("you win!", 64 - #"you win!" * 2, 42, 11)
+    	local score_text = "score: "..score
+    	print(score_text, 64 - #score_text * 2, 50, 15)
+    	if bricks_destroyed_combo == total_bricks_possible and time() % 0.5 < 0.25 then
+    		print("perfect round!", 64 - #"perfect round!" * 2, 58, 11)
+		end
     local combo_text = "max combo: "..max_combo
     print(combo_text, 64 - #combo_text * 2, 66, 15)
     print("press x to restart", 64 - #"press x to restart" * 2, 74, 15)
@@ -95,13 +95,12 @@ function move_paddle()
 	if btn(➡️) then
 		pad.x+=pad.s
 	end
-	
 	if pad.x < 0 then
-  pad.x = 0
- end
- if pad.x + pad.w > 128 then
-  pad.x = 128 - pad.w
- end
+  		pad.x = 0
+ 	end
+ 	if pad.x + pad.w > 128 then
+		pad.x = 128 - pad.w
+ 	end
 end
 
 function draw_paddle()
@@ -181,36 +180,52 @@ function check_brick_collision()
                ball.x - ball.s <= brick.x + brick.w and
                ball.y + ball.s >= brick.y and
                ball.y - ball.s <= brick.y + brick.h then
-                brick.alive = false
-                bricks_destroyed_combo += 1
-				if bricks_destroyed_combo > max_combo then
-   					max_combo = bricks_destroyed_combo
-				end
-				if bricks_destroyed_combo % 10 == 0 then
-					combo_popup.active = true
-					combo_popup.text = bricks_destroyed_combo.." combo!"
-					combo_popup.start_time = time()
-					
-					-- Get color from current multiplier tier
-					local mult_tier = flr(multiplier)
-					combo_popup.color = multi_effects[mult_tier].color
-					
-					combo_popup.x = rnd(128 - #combo_popup.text * 4)
-					combo_popup.y = 64
-				end
-				score += ceil(brick.type * 10 * multiplier)
-                multiplier = min(multiplier + 0.25, 4)
-                sfx(0)
-                ball.vely *= -1
-                if ball.vely > 0 then
-                    ball.y = brick.y + brick.h + ball.s + 1
-                else
-                    ball.y = brick.y - ball.s - 1
-                end
-                return
-            end
-        end
+               handle_brick_hit(brick)
+			end   
+		end
     end
+end
+
+function handle_brick_hit(brick)
+	if brick.health > 0 then
+    	brick.health -= 1
+	    if brick.health == 0 then
+    	    brick.alive = false
+        	update_combo()
+        	update_score(brick)
+    	end
+	end
+	sfx(0)
+	ball.vely *= -1
+    if ball.vely > 0 then
+		ball.y = brick.y + brick.h + ball.s + 1
+	else
+		ball.y = brick.y - ball.s - 1
+    end
+    return
+end
+
+function update_combo()
+	bricks_destroyed_combo += 1
+	if bricks_destroyed_combo > max_combo then
+   		max_combo = bricks_destroyed_combo
+	end
+	if bricks_destroyed_combo % 10 == 0 then
+		combo_popup.active = true
+		combo_popup.text = bricks_destroyed_combo.." combo!"
+		combo_popup.start_time = time()
+				
+		local mult_tier = flr(multiplier)
+		combo_popup.color = multi_effects[mult_tier].color
+				
+		combo_popup.x = rnd(128 - #combo_popup.text * 4)
+		combo_popup.y = 64
+	end
+end
+
+function update_score(brick)
+	score += ceil(brick.type * 10 * multiplier)
+    multiplier = min(multiplier + 0.25, 4)
 end
 
 function lose_dead_ball()      
@@ -232,7 +247,7 @@ end
 
 function check_win()
     for brick in all(bricks) do
-        if brick.alive then
+        if brick.alive and brick.health > 0 then
             return
         end
     end
@@ -242,38 +257,40 @@ end
 --scene functions
 --level layout
 level = {
-    {1,1,1,1,1,1,1,1,1,1},
-    {1,1,1,1,1,1,1,1,1,1},
 	{1,1,1,1,1,1,1,1,1,1},
 	{1,1,1,1,1,1,1,1,1,1},
-    {1,1,1,1,1,1,1,1,1,1}
+	{1,1,4,4,1,1,4,4,1,1},
+	{1,1,1,1,1,1,1,1,1,1},
+	{1,1,1,1,1,1,1,1,1,1}
 }
--- brick configuration
-brick_cols = 10
-brick_rows = 5
-brick_gap = 2
-brick_h = 3
-brick_start_y = 20
-side_margin = 4
-available_width = 128 - (side_margin * 2)
-brick_spacing_x = (available_width + brick_gap) / brick_cols
-brick_w = brick_spacing_x - brick_gap
-brick_offset_x = side_margin
-brick_spacing_y = 5
 
 function make_bricks()
-    for row = 1, #level do
+    local brick_w=10
+	local brick_h=3
+	local start_x=4
+	local start_y=20
+	local gap=2
+
+	for row = 1, #level do
         for col = 1, #level[row] do
             local brick_type = level[row][col]
             
             if brick_type > 0 then
-                total_bricks_possible+=1
+				local health=brick_type
+				if brick_type==4 then
+					health=-1
+				end
+                if health > 0 then  -- Only count destructible bricks
+    				total_bricks_possible += 1
+				end
 				add(bricks, {
-                    x = (col - 1) * brick_spacing_x + brick_offset_x,
-                    y = (row - 1) * brick_spacing_y + brick_start_y,
+                    x = start_x + (col-1) * (brick_w + gap),
+                    y = start_y + (row-1) * (brick_h + gap),
                     w = brick_w,
                     h = brick_h,
                     type = brick_type,
+					health=health,
+					max_health=brick_type,
                     color = brick_type + 7,
                     alive = true
                 })
@@ -281,6 +298,7 @@ function make_bricks()
         end
     end
 end
+
 function draw_brick(brick)
     if brick.alive then
         rectfill(brick.x, brick.y, 
